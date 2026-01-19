@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
 
 import { global } from '@storybook/global';
@@ -56,6 +56,14 @@ export const useNavigate = () => {
     }
     if (typeof to === 'string') {
       const target = plain ? to : `?path=${to}`;
+      const [search, hash] = target.split('#');
+
+      if (search === document.location.search && hash) {
+        addons.getChannel().emit(NAVIGATE_URL, `#${hash}`);
+
+        return undefined;
+      }
+
       return navigate(target, options);
     }
     if (typeof to === 'number') {

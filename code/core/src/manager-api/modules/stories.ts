@@ -199,7 +199,7 @@ export interface SubAPI {
   selectStory: (
     kindOrId?: string,
     story?: StoryId,
-    obj?: { ref?: string; viewMode?: API_ViewMode }
+    obj?: { ref?: string; viewMode?: API_ViewMode; scrollTo?: string }
   ) => void;
   /**
    * Returns the current story's data, including its ID, kind, name, and parameters.
@@ -546,13 +546,15 @@ export const init: ModuleFn<SubAPI, SubState> = ({
       navigate('/');
     },
     selectStory: (titleOrId = undefined, name = undefined, options = {}) => {
-      const { ref } = options;
+      const { ref, scrollTo } = options;
       const { storyId, index, filteredIndex, refs, settings } = store.getState();
 
       const gotoStory = (entry?: API_HashEntry) => {
         if (entry?.type === 'docs' || entry?.type === 'story') {
           store.setState({ settings: { ...settings, lastTrackedStoryId: entry.id } });
-          navigate(`/${entry.type}/${entry.refId ? `${entry.refId}_${entry.id}` : entry.id}`);
+          navigate(
+            `/${entry.type}/${entry.refId ? `${entry.refId}_${entry.id}` : entry.id}${scrollTo ? `#${scrollTo}` : ''}`
+          );
           return true;
         }
         return false;

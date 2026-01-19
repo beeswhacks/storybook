@@ -47,6 +47,10 @@ export function setup() {
         document.body.removeAttribute('inert');
       }
     });
+
+    channel.on(NAVIGATE_URL, (hash: string) => {
+      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+    });
   });
 
   // handle all uncaught StorybookError at the root of the application and log to telemetry if applicable

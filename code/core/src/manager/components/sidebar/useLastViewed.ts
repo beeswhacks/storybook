@@ -27,13 +27,24 @@ export const useLastViewed = (selection: Selection) => {
     (story: StoryRef) => {
       const items = lastViewedRef.current;
       const index = items.findIndex(
-        ({ storyId, refId }) => storyId === story.storyId && refId === story.refId
+        ({ storyId, refId, anchor }) =>
+          storyId === story.storyId && refId === story.refId && anchor === story.anchor
       );
 
       if (index === 0) {
         return;
       }
       if (index === -1) {
+        // When arriving from URL selection (no anchor), don't duplicate an existing
+        // anchor-bearing entry that already sits at position 0 for this story.
+        if (
+          !story.anchor &&
+          items[0]?.storyId === story.storyId &&
+          items[0]?.refId === story.refId &&
+          items[0]?.anchor
+        ) {
+          return;
+        }
         lastViewedRef.current = [story, ...items];
       } else {
         lastViewedRef.current = [story, ...items.slice(0, index), ...items.slice(index + 1)];
@@ -51,6 +62,7 @@ export const useLastViewed = (selection: Selection) => {
 
   return {
     getLastViewed: useCallback(() => lastViewedRef.current, [lastViewedRef]),
+    updateLastViewed,
     clearLastViewed: useCallback(() => {
       lastViewedRef.current = lastViewedRef.current.slice(0, 1);
       save(lastViewedRef.current);
