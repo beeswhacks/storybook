@@ -189,7 +189,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "bash -c 'rm -rf /tmp/sb-init-empty-$STORYBOOK_INIT_EMPTY_TYPE && mkdir -p /tmp/sb-init-empty-$STORYBOOK_INIT_EMPTY_TYPE && cd /tmp/sb-init-empty-$STORYBOOK_INIT_EMPTY_TYPE && npm set registry http://localhost:6001 && npx --yes create-storybook@latest --yes --package-manager npm --loglevel=debug'"
+          "bash -c 'SB_DIR=\"$(node -p \"require(\\\"os\\\").tmpdir()\")/sb-init-empty-$STORYBOOK_INIT_EMPTY_TYPE\" && rm -rf \"$SB_DIR\" && mkdir -p \"$SB_DIR\" && cd \"$SB_DIR\" && npm set registry http://localhost:6001 && npx --yes create-storybook@latest --yes --package-manager npm --loglevel=debug'"
         ],
         "parallel": false
       },
@@ -201,10 +201,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "bash -c 'rm -rf /tmp/sb-init-features && mkdir /tmp/sb-init-features'",
-          "bash -c 'cd /tmp/sb-init-features && npm set registry http://localhost:6001'",
-          "bash -c 'cd /tmp/sb-init-features && npx create-storybook --yes --package-manager npm --features docs test a11y --loglevel=debug'",
-          "bash -c 'cd /tmp/sb-init-features && npx vitest'"
+          "bash -c 'SB_DIR=\"$(node -p \"require(\\\"os\\\").tmpdir()\")/sb-init-features\" && rm -rf \"$SB_DIR\" && mkdir -p \"$SB_DIR\"'",
+          "bash -c 'SB_DIR=\"$(node -p \"require(\\\"os\\\").tmpdir()\")/sb-init-features\" && cd \"$SB_DIR\" && npm set registry http://localhost:6001'",
+          "bash -c 'SB_DIR=\"$(node -p \"require(\\\"os\\\").tmpdir()\")/sb-init-features\" && cd \"$SB_DIR\" && npx create-storybook --yes --package-manager npm --features docs test a11y --loglevel=debug'",
+          "bash -c 'SB_DIR=\"$(node -p \"require(\\\"os\\\").tmpdir()\")/sb-init-features\" && cd \"$SB_DIR\" && npx vitest'"
         ],
         "parallel": false
       },
